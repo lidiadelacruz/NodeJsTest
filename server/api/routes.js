@@ -1,18 +1,6 @@
 const router = require('express').Router()
 const creditorData = require('../db/model/creditorData')
 
-// Please design and implement a web API using node.js to have following features:
-
-// 3.     Add a new creditor entry
-
-// 4.     Update an existing creditor entry (partial or full update)
-
-// 5.     Implement credit analysis endpoint to return data that meet following criteria:
-
-// a.     Creditor balance should be over 2000
-
-// b.     Creditor min pay percentage shouldn’t exceed 29.99%
-
 // GET all creditor data with total balance and average min pay percentage
 router.get('/', async (req,res,next)=>{
   try {
@@ -46,7 +34,22 @@ router.post('/', async(req,res,next)=>{
   }
 })
 
-
+router.get('/search', async(req,res,next) =>{
+  try{
+    const data = await creditorData.findAll({
+      where:{
+        balance: {
+          [Op.gt] : 200
+        },
+      minPaymentPercentage:{
+         [Op.lte] : 29.99
+      }
+      }
+    })
+  } catch(error){
+    next(error)
+  }
+})
 
 
 module.exports = router
